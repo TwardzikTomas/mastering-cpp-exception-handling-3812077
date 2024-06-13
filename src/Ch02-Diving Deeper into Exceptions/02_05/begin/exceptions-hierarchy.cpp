@@ -6,7 +6,7 @@ enum ErrorType
 {
     None,
     Disk,
-    Permission,    
+    Permission,
     FileIO
 };
 
@@ -16,16 +16,16 @@ public:
     DiskAccessException(const std::string &msg) : std::runtime_error(msg) {}
 };
 
-class FilePermissionException : public std::runtime_error
+class FilePermissionException : public DiskAccessException
 {
 public:
-    FilePermissionException(const std::string &msg) : std::runtime_error(msg) {}
+    FilePermissionException(const std::string &msg) : DiskAccessException(msg) {}
 };
 
-class FileIOException : public std::runtime_error
+class FileIOException : public FilePermissionException
 {
 public:
-    FileIOException(const std::string &msg) : std::runtime_error(msg) {}
+    FileIOException(const std::string &msg) : FilePermissionException(msg) {}
 };
 
 void triggerException(ErrorType error)
@@ -47,20 +47,21 @@ int main()
 {
     try
     {
-        triggerException(ErrorType::Disk);
+        triggerException(ErrorType::FileIO);
+        // throw 101;
     }
-    catch (const DiskAccessException &e)
+    catch (const FileIOException &e)
     {
-        std::cerr << "DiskAccessException: " << e.what() << std::endl;
+        std::cerr << "FileIOException: " << e.what() << std::endl;
     }
     catch (const FilePermissionException &e)
     {
         std::cerr << "FilePermissionException: " << e.what() << std::endl;
     }
-    catch (const FileIOException &e)
+    catch (const DiskAccessException &e)
     {
-        std::cerr << "FileIOException: " << e.what() << std::endl;
-    }    
+        std::cerr << "DiskAccessException: " << e.what() << std::endl;
+    }
     catch (const std::exception &e)
     {
         std::cerr << "std::exception: " << e.what() << std::endl;

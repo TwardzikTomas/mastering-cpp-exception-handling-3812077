@@ -26,6 +26,8 @@ int main()
         std::abort(); });
 
     // Example usage that leads to the termination handler being invoked
-    throw std::runtime_error("Example of a rogue exception");
+    // throw std::runtime_error("Example of a rogue exception");
+    errno = EACCES;
+    throw 13;
     return 0; // Note: This line is unreachable due to the throw above
 }

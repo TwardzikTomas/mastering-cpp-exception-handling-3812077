@@ -12,6 +12,10 @@ public:
     {
         return "Base Exception";
     }
+    virtual const std::string test() const
+    {
+        return std::string("Base class string");
+    }
 };
 
 // Derived exception class
@@ -23,6 +27,11 @@ public:
     const char *what() const noexcept override
     {
         return "Derived Exception";
+    }
+
+    const std::string test() const
+    {
+        return std::string("Derived class string.");
     }
 };
 
@@ -38,9 +47,13 @@ int main()
     {
         triggerException();
     }
-    catch (BaseException e)
+    // catch (DerivedException e){
+    //     std::cerr << "Caught by value: " << e.what() << std::endl;
+    // }
+
+    catch (const BaseException & e)
     { // Catching by value - Slicing occurs here
-        std::cerr << "Caught by value: " << e.what() << std::endl;
+        std::cerr << "Caught by value: " << e.what() << ", test string: " << e.test() << std::endl;
     }
     return 0;
 }
